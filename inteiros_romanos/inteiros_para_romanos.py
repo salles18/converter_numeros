@@ -1,6 +1,8 @@
+import tkinter as tk
+from tkinter import messagebox
+
 class IntegerToRomanConverter:
     def __init__(self):
-        
         self.int_to_roman = [
             (1000, 'M'),
             (900, 'CM'),
@@ -18,7 +20,6 @@ class IntegerToRomanConverter:
         ]
 
     def integer_to_roman(self, num):
-        
         roman = ''
         for value, numeral in self.int_to_roman:
             while num >= value:
@@ -26,21 +27,36 @@ class IntegerToRomanConverter:
                 num -= value
         return roman
 
-def main():
+class RomanConverterApp:
+    def __init__(self, root):
+        self.converter = IntegerToRomanConverter()
+        self.root = root
+        self.root.title("Conversor de Números Inteiros para Romanos")
 
-    converter = IntegerToRomanConverter()
+        self.label = tk.Label(root, text="Digite um número inteiro (1-3999):")
+        self.label.pack(pady=10)
 
+        self.entry = tk.Entry(root)
+        self.entry.pack(pady=10)
 
-    try:
-        number = int(input("Digite um número inteiro para conversão (1-3999): "))
-        if number < 1 or number > 3999:
-            raise ValueError("O número deve estar entre 1 e 3999.")
-        
-       
-        roman_number = converter.integer_to_roman(number)
-        print(f"O número inteiro {number} é o mesmo a '{roman_number}' em números romanos.")
-    except ValueError as e:
-        print(f"Erro: {e}")
+        self.convert_button = tk.Button(root, text="Converter", command=self.convert)
+        self.convert_button.pack(pady=10)
+
+        self.result_label = tk.Label(root, text="")
+        self.result_label.pack(pady=10)
+
+    def convert(self):
+        try:
+            num = int(self.entry.get())
+            if 1 <= num <= 3999:
+                roman = self.converter.integer_to_roman(num)
+                self.result_label.config(text=f"Equivalente em romano: {roman}")
+            else:
+                messagebox.showerror("Erro", "Digite um número entre 1 e 3999.")
+        except ValueError:
+            messagebox.showerror("Erro", "Por favor, insira um número válido.")
 
 if __name__ == "__main__":
-    main()
+    root = tk.Tk()
+    app = RomanConverterApp(root)
+    root.mainloop()
